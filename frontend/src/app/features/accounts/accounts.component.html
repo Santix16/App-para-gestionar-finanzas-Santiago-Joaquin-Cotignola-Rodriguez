@@ -1,0 +1,54 @@
+<div class="page-header"><h1>Cuentas</h1></div>
+
+<mat-card appearance="outlined" class="form-card">
+  <mat-card-header>
+    <mat-card-title>{{ editingId() ? 'Editar cuenta' : 'Nueva cuenta' }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo</mat-label>
+        <mat-select formControlName="type">
+          @for (t of types; track t) {
+            <mat-option [value]="t">{{ typeLabel[t] }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Saldo inicial</mat-label>
+        <input matInput type="number" step="0.01" formControlName="initialBalance" />
+      </mat-form-field>
+      <div class="buttons">
+        <button mat-flat-button type="submit" [disabled]="form.invalid || saving()">Guardar</button>
+        @if (editingId()) {
+          <button mat-button type="button" (click)="reset()">Cancelar</button>
+        }
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<div class="grid">
+  @for (a of accounts(); track a.id) {
+    <mat-card appearance="outlined" class="kpi fade-in">
+      <mat-card-content>
+        <div class="kpi-label"><mat-icon>{{ typeIcon[a.type] }}</mat-icon> {{ typeLabel[a.type] }}</div>
+        <div class="name">{{ a.name }}</div>
+        <div class="kpi-value" [class.expense]="(balances()[a.id] ?? a.initialBalance) < 0">
+          {{ balances()[a.id] ?? a.initialBalance | currency: currency() }}
+        </div>
+        <div class="muted small">Saldo inicial: {{ a.initialBalance | currency: currency() }}</div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-button type="button" (click)="edit(a)">Editar</button>
+        <button mat-button type="button" (click)="remove(a)">Eliminar</button>
+      </mat-card-actions>
+    </mat-card>
+  } @empty {
+    <p class="empty">Todavía no tienes cuentas. Crea la primera con el formulario de arriba.</p>
+  }
+</div>

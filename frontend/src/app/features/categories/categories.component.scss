@@ -1,0 +1,38 @@
+.form-card {
+  margin-bottom: 24px;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  height: 56px;
+}
+
+.color {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 56px;
+
+  input {
+    width: 44px;
+    height: 36px;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}

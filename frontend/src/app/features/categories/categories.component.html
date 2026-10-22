@@ -1,0 +1,79 @@
+<div class="page-header">
+  <h1>Categorías</h1>
+  <button mat-stroked-button type="button" (click)="loadDefaults()">
+    <mat-icon>auto_fix_high</mat-icon> Añadir categorías por defecto
+  </button>
+</div>
+
+<mat-card appearance="outlined" class="form-card">
+  <mat-card-header>
+    <mat-card-title>{{ editingId() ? 'Editar categoría' : 'Nueva categoría' }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo</mat-label>
+        <mat-select formControlName="type">
+          <mat-option value="EXPENSE">Gasto</mat-option>
+          <mat-option value="INCOME">Ingreso</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <label class="color">
+        <span class="muted">Color</span>
+        <input type="color" formControlName="color" aria-label="Color de la categoría" />
+      </label>
+      <div class="buttons">
+        <button mat-flat-button type="submit" [disabled]="form.invalid || saving()">Guardar</button>
+        @if (editingId()) {
+          <button mat-button type="button" (click)="reset()">Cancelar</button>
+        }
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+@if (loaded() && categories().length === 0) {
+  <p class="empty">
+    No tienes categorías. Pulsa «Añadir categorías por defecto» para empezar rápido.
+  </p>
+}
+
+<div class="grid-2">
+  <mat-card appearance="outlined">
+    <mat-card-header><mat-card-title>Gastos</mat-card-title></mat-card-header>
+    <mat-card-content>
+      @for (c of expenses(); track c.id) {
+        <div class="row">
+          <span><span class="dot" [style.background]="c.color"></span>{{ c.name }}</span>
+          <span>
+            <button mat-icon-button type="button" aria-label="Editar" (click)="edit(c)"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button type="button" aria-label="Eliminar" (click)="remove(c)"><mat-icon>delete</mat-icon></button>
+          </span>
+        </div>
+      } @empty {
+        <p class="muted">Sin categorías de gasto.</p>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card appearance="outlined">
+    <mat-card-header><mat-card-title>Ingresos</mat-card-title></mat-card-header>
+    <mat-card-content>
+      @for (c of incomes(); track c.id) {
+        <div class="row">
+          <span><span class="dot" [style.background]="c.color"></span>{{ c.name }}</span>
+          <span>
+            <button mat-icon-button type="button" aria-label="Editar" (click)="edit(c)"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button type="button" aria-label="Eliminar" (click)="remove(c)"><mat-icon>delete</mat-icon></button>
+          </span>
+        </div>
+      } @empty {
+        <p class="muted">Sin categorías de ingreso.</p>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

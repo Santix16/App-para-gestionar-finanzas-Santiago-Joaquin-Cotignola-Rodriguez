@@ -1,0 +1,53 @@
+.block {
+  margin-bottom: 16px;
+}
+
+.alert {
+  margin-bottom: 16px;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
+.chart {
+  position: relative;
+  height: 280px;
+  margin-top: 16px;
+}
+
+.projection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin-top: 16px;
+
+  strong {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.budget {
+  margin: 18px 0;
+
+  &.near {
+    --mat-progress-bar-active-indicator-color: #f9a825;
+  }
+
+  &.over {
+    --mat-progress-bar-active-indicator-color: var(--mat-sys-error);
+  }
+}
+
+.budget-head {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.msg {
+  display: block;
+  margin-top: 4px;
+  color: var(--mat-sys-on-surface-variant);
+}

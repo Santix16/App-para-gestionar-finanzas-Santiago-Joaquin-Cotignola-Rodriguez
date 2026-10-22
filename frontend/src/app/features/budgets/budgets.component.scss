@@ -1,0 +1,36 @@
+.form-card {
+  margin-bottom: 24px;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  height: 56px;
+}
+
+.budget {
+  margin: 18px 0;
+
+  &.near {
+    --mat-progress-bar-active-indicator-color: #f9a825;
+  }
+
+  &.over {
+    --mat-progress-bar-active-indicator-color: var(--mat-sys-error);
+  }
+}
+
+.budget-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.msg {
+  display: block;
+  margin-top: 4px;
+  color: var(--mat-sys-on-surface-variant);
+}

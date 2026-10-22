@@ -1,0 +1,56 @@
+<div class="page-header">
+  <h1>Presupuestos</h1>
+  <app-month-picker [(month)]="month" />
+</div>
+
+<mat-card appearance="outlined" class="form-card">
+  <mat-card-header>
+    <mat-card-title>Fijar presupuesto del mes</mat-card-title>
+    <mat-card-subtitle>Si la categoría ya tiene uno, se actualiza.</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Categoría de gasto</mat-label>
+        <mat-select formControlName="categoryId">
+          @for (c of expenseCategories(); track c.id) {
+            <mat-option [value]="c.id">{{ c.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Límite</mat-label>
+        <input matInput type="number" step="0.01" min="0.01" formControlName="limitAmount" />
+      </mat-form-field>
+      <div class="buttons">
+        <button mat-flat-button type="submit" [disabled]="form.invalid || saving()">Guardar</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<mat-card appearance="outlined">
+  <mat-card-content>
+    @for (b of summary()?.budgets ?? []; track b.id) {
+      <div class="budget" [class]="'budget ' + level(b.percent)">
+        <div class="budget-head">
+          <span><span class="dot" [style.background]="b.color"></span>{{ b.name }}</span>
+          <span>
+            {{ b.spent | currency: currency() }} / {{ b.limit | currency: currency() }}
+            <strong>({{ b.percent }} %)</strong>
+            <button mat-icon-button type="button" aria-label="Editar" (click)="edit(b.categoryId, b.limit)"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button type="button" aria-label="Eliminar" (click)="remove(b.id)"><mat-icon>delete</mat-icon></button>
+          </span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="cap(b.percent)"></mat-progress-bar>
+        @if (level(b.percent) === 'over') {
+          <small class="msg">Has superado el presupuesto.</small>
+        } @else if (level(b.percent) === 'near') {
+          <small class="msg">Estás cerca del límite (≥ 80 %).</small>
+        }
+      </div>
+    } @empty {
+      <p class="empty">No hay presupuestos para este mes.</p>
+    }
+  </mat-card-content>
+</mat-card>

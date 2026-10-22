@@ -1,0 +1,62 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav
+    #nav
+    class="sidenav"
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="!isMobile()"
+  >
+    <div class="brand">
+      <mat-icon>account_balance_wallet</mat-icon>
+      <span>Finanzas</span>
+    </div>
+    <mat-nav-list>
+      @for (item of items; track item.path) {
+        <a
+          mat-list-item
+          [routerLink]="item.path"
+          routerLinkActive
+          #rla="routerLinkActive"
+          [activated]="rla.isActive"
+          (click)="isMobile() && nav.close()"
+        >
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="toolbar">
+      @if (isMobile()) {
+        <button mat-icon-button type="button" aria-label="Abrir menú" (click)="nav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+      <span class="spacer"></span>
+      <span class="user">{{ auth.user()?.name }}</span>
+      <button
+        mat-icon-button
+        type="button"
+        [matTooltip]="theme.isDark() ? 'Modo claro' : 'Modo oscuro'"
+        [attr.aria-label]="theme.isDark() ? 'Activar modo claro' : 'Activar modo oscuro'"
+        (click)="theme.toggle()"
+      >
+        <mat-icon>{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        type="button"
+        matTooltip="Cerrar sesión"
+        aria-label="Cerrar sesión"
+        (click)="auth.logout()"
+      >
+        <mat-icon>logout</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <main class="content fade-in">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
