@@ -50,6 +50,16 @@ jobs:
           if [ ! -d android ]; then npx cap add android; fi
           npx cap sync android
 
+      - name: Instalar el plugin nativo de Descargas
+        run: |
+          DIR=android/app/src/main/java/com/finanzas/app
+          if [ ! -d "$DIR" ]; then
+            echo "::error::No existe $DIR. Si cambiaste el appId, ajusta esta ruta y el 'package' de native/android/*.java"
+            exit 1
+          fi
+          cp native/android/DownloadsPlugin.java native/android/MainActivity.java "$DIR/"
+          ls -l "$DIR"
+
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Compilar el APK

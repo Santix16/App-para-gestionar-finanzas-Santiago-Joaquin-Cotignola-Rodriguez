@@ -1,5 +1,9 @@
 {
   "files.exclude": {
     "**/node_modules": true
+  },
+  "java.import.exclusions": ["**/native/**"],
+  "sonarlint.rules": {
+    "Web:InputWithoutLabelCheck": { "level": "off" }
   }
 }
