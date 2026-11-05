@@ -1,12 +1,15 @@
 name: Android APK
 
+# APK en modo local: los datos viven en el móvil, sin API ni cuenta.
+# Se ejecuta a mano (Actions -> Android APK -> Run workflow)
+# o al subir una etiqueta de versión: git tag v1.0.0 && git push origin v1.0.0
 on:
   workflow_dispatch:
   push:
     tags: ["v*"]
 
 permissions:
-  contents: write
+  contents: write # solo se usa para adjuntar el APK a la release cuando hay etiqueta
 
 jobs:
   apk:
@@ -34,6 +37,7 @@ jobs:
           accept-android-sdk-licenses: true
 
       - name: Instalar dependencias
+        # Si el package-lock.json (creado en Windows) no cuadra en Linux, npm install lo corrige
         run: npm ci || npm install --no-audit --no-fund
 
       - name: Activar modo local y empaquetar las fuentes
@@ -54,10 +58,12 @@ jobs:
         run: |
           DIR=android/app/src/main/java/com/finanzas/app
           if [ ! -d "$DIR" ]; then
-            echo "::error::No existe $DIR. Si cambiaste el appId, ajusta esta ruta y el 'package' de native/android/*.java"
+            echo "::error::No existe $DIR. Si cambiaste el appId, ajusta esta ruta y el 'package' de native/android/*.java.txt"
             exit 1
           fi
-          cp native/android/DownloadsPlugin.java native/android/MainActivity.java "$DIR/"
+          # En el repositorio llevan ".txt" para que el editor no los trate como Java suelto
+          cp native/android/DownloadsPlugin.java.txt "$DIR/DownloadsPlugin.java"
+          cp native/android/MainActivity.java.txt "$DIR/MainActivity.java"
           ls -l "$DIR"
 
       - uses: gradle/actions/setup-gradle@v4
