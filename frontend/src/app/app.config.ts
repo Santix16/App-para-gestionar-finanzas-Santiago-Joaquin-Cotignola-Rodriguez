@@ -14,6 +14,8 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { routes } from './app.routes';
 import { AuthService } from './core/auth.service';
 import { authInterceptor } from './core/auth.interceptor';
+import { LOCAL_MODE } from './core/app-mode';
+import { LOCAL_PROVIDERS } from './core/local/local-providers';
 import { ThemeService } from './core/theme.service';
 
 registerLocaleData(localeEs);
@@ -25,6 +27,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor])),
     provideCharts(withDefaultRegisterables()),
     { provide: LOCALE_ID, useValue: 'es' },
+    // En la APK, la API y la sesión se sustituyen por datos guardados en el móvil
+    ...(LOCAL_MODE ? LOCAL_PROVIDERS : []),
     // Aplica claro/oscuro desde el arranque, también en el login
     provideAppInitializer(() => {
       inject(ThemeService);

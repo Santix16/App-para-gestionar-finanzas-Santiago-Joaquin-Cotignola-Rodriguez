@@ -9,6 +9,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { LOCAL_MODE } from '../../core/app-mode';
 import { AuthService } from '../../core/auth.service';
 import { ThemeService } from '../../core/theme.service';
 
@@ -39,6 +40,8 @@ export class LayoutComponent {
     { initialValue: false },
   );
 
+  readonly localMode = LOCAL_MODE;
+
   readonly items = [
     { path: '/dashboard', label: 'Resumen', icon: 'dashboard' },
     { path: '/transactions', label: 'Movimientos', icon: 'receipt_long' },
@@ -46,5 +49,6 @@ export class LayoutComponent {
     { path: '/categories', label: 'Categorías', icon: 'category' },
     { path: '/budgets', label: 'Presupuestos', icon: 'savings' },
     { path: '/reports', label: 'Informes', icon: 'description' },
+    ...(LOCAL_MODE ? [{ path: '/settings', label: 'Ajustes', icon: 'settings' }] : []),
   ];
 }

@@ -44,15 +44,17 @@
       >
         <mat-icon>{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
-      <button
-        mat-icon-button
-        type="button"
-        matTooltip="Cerrar sesión"
-        aria-label="Cerrar sesión"
-        (click)="auth.logout()"
-      >
-        <mat-icon>logout</mat-icon>
-      </button>
+      @if (!localMode) {
+        <button
+          mat-icon-button
+          type="button"
+          matTooltip="Cerrar sesión"
+          aria-label="Cerrar sesión"
+          (click)="auth.logout()"
+        >
+          <mat-icon>logout</mat-icon>
+        </button>
+      }
     </mat-toolbar>
 
     <main class="content fade-in">

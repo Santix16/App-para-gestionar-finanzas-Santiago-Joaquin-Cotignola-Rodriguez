@@ -6,7 +6,7 @@ on:
     tags: ["v*"]
 
 permissions:
-  contents: write 
+  contents: write
 
 jobs:
   apk:
@@ -16,26 +16,6 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v4
-
-      - name: Comprobar la URL de la API
-        env:
-          API_URL: ${{ vars.API_URL }}
-        run: |
-          if [ -z "$API_URL" ]; then
-            echo "::error::Falta la variable de repositorio API_URL (Settings > Secrets and variables > Actions > Variables). Ejemplo: https://mi-api.onrender.com/api"
-            exit 1
-          fi
-          case "$API_URL" in
-            https://*) ;;
-            *) echo "::error::API_URL debe empezar por https://"; exit 1 ;;
-          esac
-
-      - name: Escribir la URL de la API en el frontend
-        env:
-          API_URL: ${{ vars.API_URL }}
-        run: |
-          node -e "require('fs').writeFileSync('src/app/core/api.config.ts', 'export const API_URL = ' + JSON.stringify(process.env.API_URL) + ';\n')"
-          cat src/app/core/api.config.ts
 
       - uses: actions/setup-node@v4
         with:
@@ -50,10 +30,17 @@ jobs:
 
       - uses: android-actions/setup-android@v3
         with:
-          packages: 'platforms;android-34 build-tools;34.0.0'
+          packages: "platforms;android-36 build-tools;36.0.0"
           accept-android-sdk-licenses: true
 
-      - run: npm ci
+      - name: Instalar dependencias
+        run: npm ci || npm install --no-audit --no-fund
+
+      - name: Activar modo local y empaquetar las fuentes
+        run: |
+          npm install --no-save --no-audit --no-fund @fontsource/roboto@5 material-icons@1
+          node scripts/prepare-local.mjs
+          cat src/app/core/app-mode.ts
 
       - name: Compilar Angular
         run: npx ng build --configuration production
